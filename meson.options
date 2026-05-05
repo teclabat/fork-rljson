@@ -22,6 +22,12 @@ option('testmode',
 	description: 'Build with whitebox testing hooks exposed'
 )
 
+option('benchmark',
+	type: 'boolean',
+	value: false,
+	description: 'Enable benchmarks'
+)
+
 option('unload',
 	type: 'boolean',
 	value: true,

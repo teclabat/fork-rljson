@@ -1,5 +1,5 @@
 project('rl_json', 'c',
-  version:            '0.17.2',
+  version:            '0.17.3',
   default_options:    ['c_std=c23,c2x,c17,c11','warning_level=3','werror=true'],
   meson_version:      '>=1.3.0',
 )
@@ -37,9 +37,13 @@ inc = []
 subdir('teabase/init')
 
 # Optional dependency to compare our performance against yajl-tcl's in the benchmarks
-yajl_tcl_sub = subproject('yajl-tcl', required: false)
-tea_bench_extra_depends = yajl_tcl_sub.found() ? [yajl_tcl_sub.get_variable('yajltcl_mod')] : []
-tea_bench_deps += yajl_tcl_sub.get_variable('yajl_tcl_dep')
+if get_option('benchmark')
+  yajl_tcl_sub = subproject('yajl-tcl', required: false)
+  if yajl_tcl_sub.found()
+    tea_bench_extra_depends += yajl_tcl_sub.get_variable('yajltcl_mod')
+    tea_bench_deps          += yajl_tcl_sub.get_variable('yajl_tcl_dep')
+  endif
+endif
 
 # Feature detection (must come after teabase/init which provides tcl_dep) <<<
 conf.set10('HAVE___BUILTIN_FFSLL',      cc.has_function('__builtin_ffsll'))
