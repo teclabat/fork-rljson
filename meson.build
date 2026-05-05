@@ -1,5 +1,5 @@
 project('rl_json', 'c',
-  version:            '0.17.1',
+  version:            '0.17.2',
   default_options:    ['c_std=c23,c2x,c17,c11','warning_level=3','werror=true'],
   meson_version:      '>=1.3.0',
 )
@@ -31,14 +31,15 @@ tea_want_shims = [
   'Tcl_GetBytesFromObj',
 ]
 
-# Optional dependency to compare our performance against yajl-tcl's in the benchmarks
-yajl_tcl_sub = subproject('yajl-tcl', required: false)
-tea_bench_deps = yajl_tcl_sub.found() ? [yajl_tcl_sub.get_variable('yajltcl_mod')] : []
-
 deps = []
 inc = []
 
 subdir('teabase/init')
+
+# Optional dependency to compare our performance against yajl-tcl's in the benchmarks
+yajl_tcl_sub = subproject('yajl-tcl', required: false)
+tea_bench_extra_depends = yajl_tcl_sub.found() ? [yajl_tcl_sub.get_variable('yajltcl_mod')] : []
+tea_bench_deps += yajl_tcl_sub.get_variable('yajl_tcl_dep')
 
 # Feature detection (must come after teabase/init which provides tcl_dep) <<<
 conf.set10('HAVE___BUILTIN_FFSLL',      cc.has_function('__builtin_ffsll'))
@@ -76,8 +77,9 @@ deps += declare_dependency(
       meson.project_build_root(),
       meson.project_source_root() / 'generic/rl_json.decls',
     ],
-    install: true,
+    install:     true,
     install_dir: [false, pkg_dir],
+    install_tag: [false, meson.is_subproject() ? 'deps' : 'runtime'],
   ),
 )
 
@@ -116,6 +118,7 @@ inc += include_directories('.')
 install_data(
     'generic/rl_json.h',
     install_dir: pkg_dir,
+    install_tag: meson.is_subproject() ? 'deps' : 'runtime',
 )
 
 # teabase builds the shared module and generates config.h
@@ -128,6 +131,7 @@ stubs_lib = static_library(meson.project_name() + 'stub',
   include_directories:  inc,
   install:              true,
   install_dir:          pkg_dir,
+  install_tag:          meson.is_subproject() ? 'deps' : 'runtime',
 )
 
 # Generate relocatable pkg-config file for stub library
@@ -142,6 +146,7 @@ configure_file(
   configuration:  pc_conf,
   install_dir:    tcl_dep.get_variable('libdir') / 'pkgconfig',
   install:        true,
+  install_tag:    meson.is_subproject() ? 'deps' : 'runtime',
 )
 
 # Override-dependency for meson subproject consumers. Mirrors the
@@ -149,7 +154,6 @@ configure_file(
 # `dependency('rl_json', fallback: ['rl_json', 'rl_json_dep']).get_variable('tcl_pkg_path')`
 # returns the right directory regardless of whether rl_json was found
 # via pkg-config or rebuilt from source as a subproject.
-fs = import('fs')
 rl_json_dep = declare_dependency(
   variables: {
     'tcl_pkg_path': fs.parent(pkg_so.full_path()),

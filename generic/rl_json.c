@@ -4138,7 +4138,7 @@ static int jsonNRObj(ClientData cdata, Tcl_Interp* interp, int objc, Tcl_Obj *co
 				};
 				int idx;
 
-				enum {A_cmd, A_KEY, A_objc};
+				enum {A_cmd=1, A_KEY, A_objc};
 				CHECK_ARGS("key");
 
 				TEST_OK(Tcl_GetIndexFromObjStruct(interp, objv[A_KEY], tstr, sizeof(struct teststring), "key", TCL_EXACT, &idx));

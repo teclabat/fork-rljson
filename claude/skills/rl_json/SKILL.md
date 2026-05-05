@@ -248,8 +248,8 @@ set users {[]}
 db eval {SELECT name, email, active FROM users} {
     json set users end+1 [json template {
         {
-            "name": "~S:name",
-            "email": "~S:email",
+            "name":   "~S:name",
+            "email":  "~S:email",
             "active": "~B:active"
         }
     }]

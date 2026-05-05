@@ -1,6 +1,6 @@
 project('yajltcl', 'c',
   version:          '1.8.1',
-  meson_version:    '>=0.64.0',
+  meson_version:    '>=1.3.0',
   default_options:  ['warning_level=1', 'werror=false'],
 )
 
@@ -36,7 +36,13 @@ configure_file(input: 'pkgIndex.tcl.in',  output: 'pkgIndex.tcl', configuration:
 configure_file(input: 'yajl.tcl',         output: 'yajl.tcl',     copy: true)
 
 # Wrap fallback dependency
-yajl_tcl_dep = declare_dependency(dependencies: deps)
+yajl_tcl_dep = declare_dependency(
+  dependencies: deps,
+  variables: {
+    'tcl_pkg_path': fs.parent(yajltcl_mod.full_path()),
+    'version':      meson.project_version(),
+  },
+)
 meson.override_dependency('yajl-tcl', yajl_tcl_dep)
 
 # Extend devenv so 'package require yajltcl' works during build
