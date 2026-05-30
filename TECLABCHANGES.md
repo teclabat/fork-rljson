@@ -6,13 +6,10 @@ This document describes all changes made by TERMA/TECLAB on top of the upstream
 ## Commit History (TECLAB additions)
 
 ```
-85fd158 clean tests for tcl86 builds on msys2
+(pending) add TECLABCHANGES.md and update README.md
+b16828a  adding autoarray, autoobject and pretty enhancements
+85fd158  clean tests for tcl86 builds on msys2
 ```
-
-Previous TECLAB work (from fork-rljson, now merged):
-- New `json autoarray` command
-- New `json autoobject` command
-- Enhanced `json pretty` command (`-compact`, `-nopadding`, `-arrays`)
 
 ---
 
@@ -108,6 +105,7 @@ json autoarray True FALSE
 **Files:**
 - `generic/rl_json.c`: `jsonAutoArray()` implementation; dispatch table wiring
 - `tests/autoarray.test`: 33 new tests
+- `README.md`: synopsis entry and full command description added
 
 ---
 
@@ -138,6 +136,7 @@ json autoobject key        ;# error: wrong # args
 **Files:**
 - `generic/rl_json.c`: `jsonAutoObject()` implementation; dispatch table wiring
 - `tests/autoobject.test`: 31 new tests
+- `README.md`: synopsis entry and full command description added
 
 ---
 
@@ -205,6 +204,7 @@ json pretty -arrays multiline {[1,2,3]}       ;# → each on its own line
 - `generic/rl_jsonDecls.h`: `JSON_Pretty` stub declaration and struct field updated
 - `generic/rl_json.decls`: Stubs source declaration updated
 - `tests/pretty.test`: 18 new tests; 2 existing tests updated for new option set
+- `README.md`: synopsis and per-option documentation updated
 
 ---
 
@@ -265,12 +265,14 @@ json pretty ?-indent indent? ?-compact? ?-nopadding? ?-arrays inline|multiline? 
 
 ---
 
-## Test Summary
+## Documentation and Test Summary
 
-| File | Status | Tests |
+| File | Status | Notes |
 |------|--------|-------|
-| `tests/autoarray.test` | New | 33 |
-| `tests/autoobject.test` | New | 31 |
-| `tests/pretty.test` | Updated | +18 new, 2 updated |
-| `tests/all.tcl` | Updated | encoding + singleproc fix |
+| `README.md` | Updated | autoarray, autoobject sections added; pretty options documented |
+| `TECLABCHANGES.md` | New | This file |
+| `tests/autoarray.test` | New | 33 tests |
+| `tests/autoobject.test` | New | 31 tests |
+| `tests/pretty.test` | Updated | +18 new tests, 2 updated for new option set |
+| `tests/all.tcl` | Updated | UTF-8 encoding + singleproc fix for Windows |
 | `teabase/names.c` | Updated | MinGW64 compile fix |
